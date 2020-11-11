@@ -869,7 +869,7 @@ ApplicationMain.main = function() {
 ApplicationMain.create = function(config) {
 	var app = new openfl_display_Application();
 	ManifestResources.init(config);
-	app.meta.h["build"] = "2";
+	app.meta.h["build"] = "3";
 	app.meta.h["company"] = "HaxeFlixel";
 	app.meta.h["file"] = "astr0idClon";
 	app.meta.h["name"] = "astr0idClon";
@@ -5532,6 +5532,7 @@ flixel_FlxState.prototype = $extend(flixel_group_FlxTypedGroup.prototype,{
 	,__properties__: $extend(flixel_group_FlxTypedGroup.prototype.__properties__,{set_bgColor:"set_bgColor",get_bgColor:"get_bgColor"})
 });
 var PlayState = function(MaxSize) {
+	this.astroids = [];
 	flixel_FlxState.call(this,MaxSize);
 };
 $hxClasses["PlayState"] = PlayState;
@@ -5539,6 +5540,7 @@ PlayState.__name__ = "PlayState";
 PlayState.__super__ = flixel_FlxState;
 PlayState.prototype = $extend(flixel_FlxState.prototype,{
 	create: function() {
+		var _gthis = this;
 		flixel_FlxState.prototype.create.call(this);
 		this.bg = new flixel_FlxSprite();
 		this.bg.loadGraphic("assets/images/BG.png");
@@ -5550,18 +5552,128 @@ PlayState.prototype = $extend(flixel_FlxState.prototype,{
 		this.ship.set_x(flixel_FlxG.width / 2 - this.ship.get_width() / 2);
 		this.ship.set_y(flixel_FlxG.height / 2 - this.ship.get_height() / 2);
 		this.add(this.ship);
+		var _g = 0;
+		while(_g < 5) {
+			var i = _g++;
+			var ran = new flixel_math_FlxRandom();
+			var astroid_sm = new flixel_FlxSprite();
+			astroid_sm.loadGraphic("assets/images/Astroid_sm.png");
+			astroid_sm.set_x(ran.float(0,flixel_FlxG.width));
+			astroid_sm.set_y(ran.float(0,flixel_FlxG.height));
+			var radians = ran.float(0,360) * (Math.PI / 180);
+			var resetVelocity = false;
+			if(resetVelocity == null) {
+				resetVelocity = true;
+			}
+			var sinA = Math.sin(radians);
+			var cosA = Math.cos(radians);
+			if(resetVelocity) {
+				astroid_sm.velocity.set(0,0);
+			}
+			astroid_sm.acceleration.set(cosA * 150,sinA * 150);
+			astroid_sm.maxVelocity.set(Math.abs(cosA * 50),Math.abs(sinA * 50));
+			astroid_sm.angularVelocity = ran.float(-100,100);
+			this.astroids.push(astroid_sm);
+			this.add(astroid_sm);
+		}
+		var timer = new haxe_Timer(5000);
+		timer.run = function() {
+			var ran = new flixel_math_FlxRandom();
+			var astroid_sm = new flixel_FlxSprite();
+			astroid_sm.loadGraphic("assets/images/Astroid_sm.png");
+			astroid_sm.set_x(ran.float(0,flixel_FlxG.width));
+			astroid_sm.set_y(ran.float(0,flixel_FlxG.height));
+			var radians = ran.float(0,360) * (Math.PI / 180);
+			var resetVelocity = false;
+			if(resetVelocity == null) {
+				resetVelocity = true;
+			}
+			var sinA = Math.sin(radians);
+			var cosA = Math.cos(radians);
+			if(resetVelocity) {
+				astroid_sm.velocity.set(0,0);
+			}
+			astroid_sm.acceleration.set(cosA * 150,sinA * 150);
+			astroid_sm.maxVelocity.set(Math.abs(cosA * 50),Math.abs(sinA * 50));
+			astroid_sm.angularVelocity = ran.float(-100,100);
+			_gthis.add(astroid_sm);
+			_gthis.astroids.push(astroid_sm);
+		};
 	}
 	,update: function(elapsed) {
 		flixel_FlxState.prototype.update.call(this,elapsed);
+		var tmp;
+		var _this = flixel_FlxG.keys.pressed;
+		if(!_this.keyManager.checkStatus(38,_this.status)) {
+			var _this = flixel_FlxG.keys.pressed;
+			tmp = !_this.keyManager.checkStatus(40,_this.status);
+		} else {
+			tmp = false;
+		}
+		if(tmp) {
+			if(this.ship.velocity.x < 10 && this.ship.velocity.x > -10 && this.ship.velocity.y > -10 && this.ship.velocity.y < 10) {
+				var source = this.ship;
+				var radians = (this.ship.angle - 180) * (Math.PI / 180);
+				var resetVelocity = true;
+				if(resetVelocity == null) {
+					resetVelocity = true;
+				}
+				var sinA = Math.sin(radians);
+				var cosA = Math.cos(radians);
+				if(resetVelocity) {
+					source.velocity.set(0,0);
+				}
+				source.acceleration.set(cosA * 0,sinA * 0);
+				source.maxVelocity.set(Math.abs(cosA * 150),Math.abs(sinA * 150));
+			} else {
+				var source = this.ship;
+				var radians = (this.ship.angle - 180) * (Math.PI / 180);
+				var resetVelocity = false;
+				if(resetVelocity == null) {
+					resetVelocity = true;
+				}
+				var sinA = Math.sin(radians);
+				var cosA = Math.cos(radians);
+				if(resetVelocity) {
+					source.velocity.set(0,0);
+				}
+				source.acceleration.set(cosA * 20,sinA * 20);
+				source.maxVelocity.set(Math.abs(cosA * 150),Math.abs(sinA * 150));
+			}
+		}
 		var _this = flixel_FlxG.keys.pressed;
 		if(_this.keyManager.checkStatus(37,_this.status)) {
 			var _g = this.ship;
-			_g.set_angle(_g.angle - 1.5);
+			_g.set_angle(_g.angle - 2);
+			var Speed = this.ship.velocity.x + this.ship.velocity.y;
+			var a = this.ship.angle * (Math.PI / 180);
+			var X = Math.cos(a) * Speed;
+			var Y = Math.sin(a) * Speed;
+			if(Y == null) {
+				Y = 0;
+			}
+			if(X == null) {
+				X = 0;
+			}
+			var point = flixel_math_FlxPoint._pool.get().set(X,Y);
+			point._inPool = false;
 		}
 		var _this = flixel_FlxG.keys.pressed;
 		if(_this.keyManager.checkStatus(39,_this.status)) {
 			var _g = this.ship;
-			_g.set_angle(_g.angle + 1.5);
+			_g.set_angle(_g.angle + 2);
+			var Speed = this.ship.velocity.x + this.ship.velocity.y;
+			var a = this.ship.angle * (Math.PI / 180);
+			var X = Math.cos(a) * Speed;
+			var Y = Math.sin(a) * Speed;
+			if(Y == null) {
+				Y = 0;
+			}
+			if(X == null) {
+				X = 0;
+			}
+			var point = flixel_math_FlxPoint._pool.get().set(X,Y);
+			point._inPool = false;
 		}
 		var _this = flixel_FlxG.keys.pressed;
 		if(_this.keyManager.checkStatus(38,_this.status)) {
@@ -5576,13 +5688,13 @@ PlayState.prototype = $extend(flixel_FlxState.prototype,{
 			if(resetVelocity) {
 				source.velocity.set(0,0);
 			}
-			source.acceleration.set(cosA * 900,sinA * 900);
-			source.maxVelocity.set(Math.abs(cosA * 50),Math.abs(sinA * 50));
+			source.acceleration.set(cosA * 150,sinA * 150);
+			source.maxVelocity.set(Math.abs(cosA * 150),Math.abs(sinA * 150));
 		}
 		var _this = flixel_FlxG.keys.pressed;
 		if(_this.keyManager.checkStatus(40,_this.status)) {
 			var source = this.ship;
-			var radians = this.ship.angle * (Math.PI / 180);
+			var radians = (this.ship.angle - 180) * (Math.PI / 180);
 			var resetVelocity = false;
 			if(resetVelocity == null) {
 				resetVelocity = true;
@@ -5592,8 +5704,38 @@ PlayState.prototype = $extend(flixel_FlxState.prototype,{
 			if(resetVelocity) {
 				source.velocity.set(0,0);
 			}
-			source.acceleration.set(cosA * 900,sinA * 900);
-			source.maxVelocity.set(Math.abs(cosA * 50),Math.abs(sinA * 50));
+			source.acceleration.set(cosA * 150,sinA * 150);
+			source.maxVelocity.set(Math.abs(cosA * 150),Math.abs(sinA * 150));
+		}
+		if(this.ship.x > flixel_FlxG.width) {
+			this.ship.set_x(0 - this.ship.get_width() + 1);
+		}
+		if(this.ship.y > flixel_FlxG.height) {
+			this.ship.set_y(0 - this.ship.get_height() + 1);
+		}
+		if(this.ship.x < 0 - this.ship.get_width()) {
+			this.ship.set_x(flixel_FlxG.width - 1);
+		}
+		if(this.ship.y < 0 - this.ship.get_height()) {
+			this.ship.set_y(flixel_FlxG.height - 1);
+		}
+		var _g = 0;
+		var _g1 = this.astroids;
+		while(_g < _g1.length) {
+			var astroid = _g1[_g];
+			++_g;
+			if(astroid.x > flixel_FlxG.width) {
+				astroid.set_x(0 - astroid.get_width() + 1);
+			}
+			if(astroid.y > flixel_FlxG.height) {
+				astroid.set_y(0 - astroid.get_height() + 1);
+			}
+			if(astroid.x < 0 - astroid.get_width()) {
+				astroid.set_x(flixel_FlxG.width - 1);
+			}
+			if(astroid.y < 0 - astroid.get_height()) {
+				astroid.set_y(flixel_FlxG.height - 1);
+			}
 		}
 	}
 	,__class__: PlayState
@@ -60853,7 +60995,7 @@ var lime_utils_AssetCache = function() {
 	this.audio = new haxe_ds_StringMap();
 	this.font = new haxe_ds_StringMap();
 	this.image = new haxe_ds_StringMap();
-	this.version = 817153;
+	this.version = 949472;
 };
 $hxClasses["lime.utils.AssetCache"] = lime_utils_AssetCache;
 lime_utils_AssetCache.__name__ = "lime.utils.AssetCache";
