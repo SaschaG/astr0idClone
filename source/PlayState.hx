@@ -7,12 +7,18 @@ import flixel.math.FlxAngle;
 import flixel.math.FlxMath;
 import flixel.math.FlxRandom;
 import flixel.math.FlxVelocity;
+import flixel.util.FlxCollision;
+import flixel.util.FlxTimer;
+import haxe.Timer;
 import js.lib.Math;
 
 class PlayState extends FlxState
 {
 	var bg:FlxSprite;
 	var ship:FlxSprite;
+	var shot:FlxSprite;
+	var activeShot = false;
+	var shotTimer: FlxTimer;
 	var astroids:Array<FlxSprite> = new Array();
 	override public function create()
 	{
@@ -28,7 +34,10 @@ class PlayState extends FlxState
 		ship.loadGraphic(AssetPaths.Ship__png);
 		ship.x = FlxG.width/2 -ship.width/2;
 		ship.y = FlxG.height/2 -ship.height/2;
-		add(ship);    
+		add(ship);
+		
+		shot = new FlxSprite();
+		shot.loadGraphic(AssetPaths.Shot__png);
 
 		for (i in 0...5){
 			var astroid_sm:FlxSprite;
@@ -44,10 +53,7 @@ class PlayState extends FlxState
 			
 		}
 		
-		
-		
-		
-		var timer = new haxe.Timer(5000); // 1000ms delay
+		var timer = new haxe.Timer(5000); 
 		timer.run = function() { 
 			var astroid_sm:FlxSprite;
 			var ran = new FlxRandom();
@@ -60,6 +66,11 @@ class PlayState extends FlxState
 			add(astroid_sm);
 			astroids.push(astroid_sm);
 		 }
+		 shotTimer = new FlxTimer();
+			shotTimer.start(-1, onTimer -> { 
+				remove(shot);
+				activeShot = false;
+		 	},0);
 	}
 
 	override public function update(elapsed:Float)
@@ -78,16 +89,27 @@ class PlayState extends FlxState
 			ship.angle -=2;
 			FlxVelocity.velocityFromAngle(ship.angle, ship.velocity.x + ship.velocity.y);
 		}
-		 if(FlxG.keys.pressed.RIGHT){
+		if(FlxG.keys.pressed.RIGHT){
 			ship.angle +=2;
 			FlxVelocity.velocityFromAngle(ship.angle, ship.velocity.x + ship.velocity.y);
 		}
-		 if(FlxG.keys.pressed.UP){
+		if(FlxG.keys.pressed.UP){
 			
 			FlxVelocity.accelerateFromAngle(ship,ship.angle * FlxAngle.TO_RAD,150,150,false);
 		}
-		 if(FlxG.keys.pressed.DOWN){
+		if(FlxG.keys.pressed.DOWN){
 			FlxVelocity.accelerateFromAngle(ship,(ship.angle -180) * FlxAngle.TO_RAD,150,150,false);
+		} 
+		if(FlxG.keys.justPressed.SPACE && !activeShot){
+			activeShot = true;
+			shot.x = ship.x;
+			shot.y = ship.y;
+			shot.angle = ship.angle;
+			var vel = FlxVelocity.velocityFromAngle(ship.angle, 300);
+			shot.velocity.x = vel.x;
+			shot.velocity.y = vel.y;
+			add(shot);
+			shotTimer.reset(1.5);
 		}
 
 
@@ -104,6 +126,19 @@ class PlayState extends FlxState
 		if(ship.y < 0 - ship.height ){
 			ship.y = FlxG.height -1 ;
 		}
+		// shot screen borders
+		if(shot.x > FlxG.width){
+			shot.x = 0 - shot.width +1;
+		}
+		if(shot.y > FlxG.height){
+			shot.y = 0 - shot.height +1;
+		}
+		if(shot.x <  0 - shot.width){
+			shot.x = FlxG.width -1 ;
+		}
+		if(shot.y < 0 - shot.height ){
+			shot.y = FlxG.height -1 ;
+		}
 
 		//astroid
 		for(astroid in astroids){
@@ -119,7 +154,19 @@ class PlayState extends FlxState
 			if(astroid.y < 0 - astroid.height ){
 				astroid.y = FlxG.height -1 ;
 			}
+			if(FlxCollision.pixelPerfectCheck(astroid, ship)){
+				// Game Over Screen here
+			}
+			if(FlxCollision.pixelPerfectCheck(astroid, shot) && activeShot){
+				remove(astroid);
+				remove(shot);
+				shotTimer.active = false;
+				activeShot = false;
+				astroids.remove(astroid);	
+			}
 		};
+
+		
 		
 	}
 }

@@ -869,7 +869,7 @@ ApplicationMain.main = function() {
 ApplicationMain.create = function(config) {
 	var app = new openfl_display_Application();
 	ManifestResources.init(config);
-	app.meta.h["build"] = "3";
+	app.meta.h["build"] = "4";
 	app.meta.h["company"] = "HaxeFlixel";
 	app.meta.h["file"] = "astr0idClon";
 	app.meta.h["name"] = "astr0idClon";
@@ -4488,7 +4488,7 @@ ManifestResources.init = function(config) {
 	openfl_text_Font.registerFont(_$_$ASSET_$_$OPENFL_$_$flixel_$fonts_$nokiafc22_$ttf);
 	openfl_text_Font.registerFont(_$_$ASSET_$_$OPENFL_$_$flixel_$fonts_$monsterrat_$ttf);
 	var bundle;
-	var data = "{\"name\":null,\"assets\":\"aoy4:pathy36:assets%2Fmusic%2Fmusic-goes-here.txty4:sizezy4:typey4:TEXTy2:idR1y7:preloadtgoR0y32:assets%2Fimages%2FAstroid_LG.pngR2i551R3y5:IMAGER5R7R6tgoR0y32:assets%2Fimages%2FAstroid_xs.pngR2i228R3R8R5R9R6tgoR0y32:assets%2Fimages%2FAstroid_md.pngR2i399R3R8R5R10R6tgoR0y26:assets%2Fimages%2FShip.pngR2i770R3R8R5R11R6tgoR0y35:assets%2Fimages%2FAstroid_md-02.pngR2i332R3R8R5R12R6tgoR0y32:assets%2Fimages%2FAstroid_sm.pngR2i272R3R8R5R13R6tgoR0y32:assets%2Fimages%2FAstroid_XL.pngR2i722R3R8R5R14R6tgoR0y36:assets%2Fimages%2Fimages-go-here.txtR2zR3R4R5R15R6tgoR0y24:assets%2Fimages%2FBG.pngR2i183533R3R8R5R16R6tgoR0y36:assets%2Fsounds%2Fsounds-go-here.txtR2zR3R4R5R17R6tgoR0y34:assets%2Fdata%2Fdata-goes-here.txtR2zR3R4R5R18R6tgoR2i39706R3y5:MUSICR5y28:flixel%2Fsounds%2Fflixel.mp3y9:pathGroupaR20y28:flixel%2Fsounds%2Fflixel.ogghR6tgoR2i2114R3R19R5y26:flixel%2Fsounds%2Fbeep.mp3R21aR23y26:flixel%2Fsounds%2Fbeep.ogghR6tgoR2i5794R3y5:SOUNDR5R24R21aR23R24hgoR2i33629R3R25R5R22R21aR20R22hgoR2i15744R3y4:FONTy9:classNamey35:__ASSET__flixel_fonts_nokiafc22_ttfR5y30:flixel%2Ffonts%2Fnokiafc22.ttfR6tgoR2i29724R3R26R27y36:__ASSET__flixel_fonts_monsterrat_ttfR5y31:flixel%2Ffonts%2Fmonsterrat.ttfR6tgoR0y33:flixel%2Fimages%2Fui%2Fbutton.pngR2i519R3R8R5R32R6tgoR0y36:flixel%2Fimages%2Flogo%2Fdefault.pngR2i3280R3R8R5R33R6tgh\",\"rootPath\":null,\"version\":2,\"libraryArgs\":[],\"libraryType\":null}";
+	var data = "{\"name\":null,\"assets\":\"aoy4:pathy36:assets%2Fmusic%2Fmusic-goes-here.txty4:sizezy4:typey4:TEXTy2:idR1y7:preloadtgoR0y32:assets%2Fimages%2FAstroid_LG.pngR2i551R3y5:IMAGER5R7R6tgoR0y32:assets%2Fimages%2FAstroid_xs.pngR2i228R3R8R5R9R6tgoR0y32:assets%2Fimages%2FAstroid_md.pngR2i399R3R8R5R10R6tgoR0y26:assets%2Fimages%2FShip.pngR2i770R3R8R5R11R6tgoR0y26:assets%2Fimages%2FShot.pngR2i98R3R8R5R12R6tgoR0y35:assets%2Fimages%2FAstroid_md-02.pngR2i332R3R8R5R13R6tgoR0y32:assets%2Fimages%2FAstroid_sm.pngR2i272R3R8R5R14R6tgoR0y32:assets%2Fimages%2FAstroid_XL.pngR2i722R3R8R5R15R6tgoR0y36:assets%2Fimages%2Fimages-go-here.txtR2zR3R4R5R16R6tgoR0y24:assets%2Fimages%2FBG.pngR2i183533R3R8R5R17R6tgoR0y36:assets%2Fsounds%2Fsounds-go-here.txtR2zR3R4R5R18R6tgoR0y34:assets%2Fdata%2Fdata-goes-here.txtR2zR3R4R5R19R6tgoR2i39706R3y5:MUSICR5y28:flixel%2Fsounds%2Fflixel.mp3y9:pathGroupaR21y28:flixel%2Fsounds%2Fflixel.ogghR6tgoR2i2114R3R20R5y26:flixel%2Fsounds%2Fbeep.mp3R22aR24y26:flixel%2Fsounds%2Fbeep.ogghR6tgoR2i5794R3y5:SOUNDR5R25R22aR24R25hgoR2i33629R3R26R5R23R22aR21R23hgoR2i15744R3y4:FONTy9:classNamey35:__ASSET__flixel_fonts_nokiafc22_ttfR5y30:flixel%2Ffonts%2Fnokiafc22.ttfR6tgoR2i29724R3R27R28y36:__ASSET__flixel_fonts_monsterrat_ttfR5y31:flixel%2Ffonts%2Fmonsterrat.ttfR6tgoR0y33:flixel%2Fimages%2Fui%2Fbutton.pngR2i519R3R8R5R33R6tgoR0y36:flixel%2Fimages%2Flogo%2Fdefault.pngR2i3280R3R8R5R34R6tgh\",\"rootPath\":null,\"version\":2,\"libraryArgs\":[],\"libraryType\":null}";
 	var manifest = lime_utils_AssetManifest.parse(data,ManifestResources.rootPath);
 	var library = lime_utils_AssetLibrary.fromManifest(manifest);
 	lime_utils_Assets.registerLibrary("default",library);
@@ -5533,6 +5533,7 @@ flixel_FlxState.prototype = $extend(flixel_group_FlxTypedGroup.prototype,{
 });
 var PlayState = function(MaxSize) {
 	this.astroids = [];
+	this.activeShot = false;
 	flixel_FlxState.call(this,MaxSize);
 };
 $hxClasses["PlayState"] = PlayState;
@@ -5552,6 +5553,8 @@ PlayState.prototype = $extend(flixel_FlxState.prototype,{
 		this.ship.set_x(flixel_FlxG.width / 2 - this.ship.get_width() / 2);
 		this.ship.set_y(flixel_FlxG.height / 2 - this.ship.get_height() / 2);
 		this.add(this.ship);
+		this.shot = new flixel_FlxSprite();
+		this.shot.loadGraphic("assets/images/Shot.png");
 		var _g = 0;
 		while(_g < 5) {
 			var i = _g++;
@@ -5599,6 +5602,11 @@ PlayState.prototype = $extend(flixel_FlxState.prototype,{
 			_gthis.add(astroid_sm);
 			_gthis.astroids.push(astroid_sm);
 		};
+		this.shotTimer = new flixel_util_FlxTimer();
+		this.shotTimer.start(-1,function(onTimer) {
+			_gthis.remove(_gthis.shot);
+			_gthis.activeShot = false;
+		},0);
 	}
 	,update: function(elapsed) {
 		flixel_FlxState.prototype.update.call(this,elapsed);
@@ -5707,6 +5715,29 @@ PlayState.prototype = $extend(flixel_FlxState.prototype,{
 			source.acceleration.set(cosA * 150,sinA * 150);
 			source.maxVelocity.set(Math.abs(cosA * 150),Math.abs(sinA * 150));
 		}
+		var _this = flixel_FlxG.keys.justPressed;
+		if(_this.keyManager.checkStatus(32,_this.status) && !this.activeShot) {
+			this.activeShot = true;
+			this.shot.set_x(this.ship.x);
+			this.shot.set_y(this.ship.y);
+			this.shot.set_angle(this.ship.angle);
+			var a = this.ship.angle * (Math.PI / 180);
+			var X = Math.cos(a) * 300;
+			var Y = Math.sin(a) * 300;
+			if(Y == null) {
+				Y = 0;
+			}
+			if(X == null) {
+				X = 0;
+			}
+			var point = flixel_math_FlxPoint._pool.get().set(X,Y);
+			point._inPool = false;
+			var vel = point;
+			this.shot.velocity.set_x(vel.x);
+			this.shot.velocity.set_y(vel.y);
+			this.add(this.shot);
+			this.shotTimer.reset(1.5);
+		}
 		if(this.ship.x > flixel_FlxG.width) {
 			this.ship.set_x(0 - this.ship.get_width() + 1);
 		}
@@ -5718,6 +5749,18 @@ PlayState.prototype = $extend(flixel_FlxState.prototype,{
 		}
 		if(this.ship.y < 0 - this.ship.get_height()) {
 			this.ship.set_y(flixel_FlxG.height - 1);
+		}
+		if(this.shot.x > flixel_FlxG.width) {
+			this.shot.set_x(0 - this.shot.get_width() + 1);
+		}
+		if(this.shot.y > flixel_FlxG.height) {
+			this.shot.set_y(0 - this.shot.get_height() + 1);
+		}
+		if(this.shot.x < 0 - this.shot.get_width()) {
+			this.shot.set_x(flixel_FlxG.width - 1);
+		}
+		if(this.shot.y < 0 - this.shot.get_height()) {
+			this.shot.set_y(flixel_FlxG.height - 1);
 		}
 		var _g = 0;
 		var _g1 = this.astroids;
@@ -5735,6 +5778,14 @@ PlayState.prototype = $extend(flixel_FlxState.prototype,{
 			}
 			if(astroid.y < 0 - astroid.get_height()) {
 				astroid.set_y(flixel_FlxG.height - 1);
+			}
+			var tmp = flixel_util_FlxCollision.pixelPerfectCheck(astroid,this.ship);
+			if(flixel_util_FlxCollision.pixelPerfectCheck(astroid,this.shot) && this.activeShot) {
+				this.remove(astroid);
+				this.remove(this.shot);
+				this.shotTimer.active = false;
+				this.activeShot = false;
+				HxOverrides.remove(this.astroids,astroid);
 			}
 		}
 	}
@@ -60995,7 +61046,7 @@ var lime_utils_AssetCache = function() {
 	this.audio = new haxe_ds_StringMap();
 	this.font = new haxe_ds_StringMap();
 	this.image = new haxe_ds_StringMap();
-	this.version = 949472;
+	this.version = 495429;
 };
 $hxClasses["lime.utils.AssetCache"] = lime_utils_AssetCache;
 lime_utils_AssetCache.__name__ = "lime.utils.AssetCache";
@@ -102102,6 +102153,7 @@ AssetPaths.Astroid_LG__png = "assets/images/Astroid_LG.png";
 AssetPaths.Astroid_xs__png = "assets/images/Astroid_xs.png";
 AssetPaths.Astroid_md__png = "assets/images/Astroid_md.png";
 AssetPaths.Ship__png = "assets/images/Ship.png";
+AssetPaths.Shot__png = "assets/images/Shot.png";
 AssetPaths.Astroid_md_02__png = "assets/images/Astroid_md-02.png";
 AssetPaths.Astroid_sm__png = "assets/images/Astroid_sm.png";
 AssetPaths.Astroid_XL__png = "assets/images/Astroid_XL.png";
