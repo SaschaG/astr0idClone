@@ -6,11 +6,13 @@ import flixel.FlxState;
 import flixel.math.FlxAngle;
 import flixel.math.FlxMath;
 import flixel.math.FlxRandom;
+import flixel.math.FlxVector;
 import flixel.math.FlxVelocity;
 import flixel.util.FlxCollision;
 import flixel.util.FlxTimer;
 import haxe.Timer;
 import js.lib.Math;
+import lime.math.Vector2;
 
 class PlayState extends FlxState
 {
@@ -55,20 +57,36 @@ class PlayState extends FlxState
 		
 		var timer = new haxe.Timer(5000); 
 		timer.run = function() { 
-			var astroid_sm:FlxSprite;
+			var astroid:FlxSprite;
 			var ran = new FlxRandom();
-			astroid_sm = new FlxSprite();
-			astroid_sm.loadGraphic(AssetPaths.Astroid_sm__png);
-			astroid_sm.x = ran.float(0,FlxG.width);
-			astroid_sm.y = ran.float(0,FlxG.height);
-			FlxVelocity.accelerateFromAngle(astroid_sm, ran.float(0,360) * FlxAngle.TO_RAD,150,50,false);
-			astroid_sm.angularVelocity = ran.float(-100, 100);
-			add(astroid_sm);
-			astroids.push(astroid_sm);
+			astroid = new FlxSprite();
+			var size = Math.floor(ran.float(0, 3));
+			if(size == 0){
+				astroid.loadGraphic(AssetPaths.Astroid_sm__png);
+				astroid.health = 1;
+			} else if(size == 1){
+				astroid.loadGraphic(AssetPaths.Astroid_md__png);
+				astroid.health = 2;
+			} else if(size == 2){
+				astroid.loadGraphic(AssetPaths.Astroid_LG__png);
+				astroid.health = 3;
+			}
+			astroid.x = ran.float(0,FlxG.width);
+			astroid.y = ran.float(0,FlxG.height);
+			FlxVelocity.accelerateFromAngle(astroid, ran.float(0,360) * FlxAngle.TO_RAD,150,50,false);
+			astroid.angularVelocity = ran.float(-100, 100);
+			add(astroid);
+			astroids.push(astroid);
+			if(astroid.x < ship.x + 30 && astroid.x > ship.x - 30 &&
+				astroid.y < ship.y + 30 && astroid.y > ship.y -30){
+				astroid.x += 35;
+				astroid.y += 35;
+			}
 		 }
 		 shotTimer = new FlxTimer();
 			shotTimer.start(-1, onTimer -> { 
 				remove(shot);
+				shot.kill();
 				activeShot = false;
 		 	},0);
 	}
@@ -101,9 +119,10 @@ class PlayState extends FlxState
 			FlxVelocity.accelerateFromAngle(ship,(ship.angle -180) * FlxAngle.TO_RAD,150,150,false);
 		} 
 		if(FlxG.keys.justPressed.SPACE && !activeShot){
+			shot.revive();
 			activeShot = true;
-			shot.x = ship.x;
-			shot.y = ship.y;
+			shot.x = ship.x + ship.width / 2;
+			shot.y = ship.y + ship.height / 2 - shot.height / 2;
 			shot.angle = ship.angle;
 			var vel = FlxVelocity.velocityFromAngle(ship.angle, 300);
 			shot.velocity.x = vel.x;
@@ -158,11 +177,35 @@ class PlayState extends FlxState
 				// Game Over Screen here
 			}
 			if(FlxCollision.pixelPerfectCheck(astroid, shot) && activeShot){
+				astroid.health--;
+				
+				if( astroid.health > 0 ){
+					for(i in 0...2){
+						var newAstroid:FlxSprite;
+						var ran = new FlxRandom();
+						newAstroid = new FlxSprite();
+						if(astroid.health == 2){
+							newAstroid.loadGraphic(AssetPaths.Astroid_md__png);
+							newAstroid.health = 2;
+						} else if(astroid.health == 1){
+							newAstroid.loadGraphic(AssetPaths.Astroid_sm__png);
+							newAstroid.health = 1;
+						}
+						newAstroid.x = astroid.x;
+						newAstroid.y = astroid.y;
+						FlxVelocity.accelerateFromAngle(newAstroid, ran.float(0,360) * FlxAngle.TO_RAD,150,50,false);
+						newAstroid.angularVelocity = ran.float(-100, 100);
+						add(newAstroid);
+						astroids.push(newAstroid);
+					}
+				}
+				
 				remove(astroid);
 				remove(shot);
 				shotTimer.active = false;
 				activeShot = false;
-				astroids.remove(astroid);	
+				astroids.remove(astroid);
+				astroid.destroy();	
 			}
 		};
 

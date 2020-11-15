@@ -869,7 +869,7 @@ ApplicationMain.main = function() {
 ApplicationMain.create = function(config) {
 	var app = new openfl_display_Application();
 	ManifestResources.init(config);
-	app.meta.h["build"] = "4";
+	app.meta.h["build"] = "5";
 	app.meta.h["company"] = "HaxeFlixel";
 	app.meta.h["file"] = "astr0idClon";
 	app.meta.h["name"] = "astr0idClon";
@@ -5582,10 +5582,20 @@ PlayState.prototype = $extend(flixel_FlxState.prototype,{
 		var timer = new haxe_Timer(5000);
 		timer.run = function() {
 			var ran = new flixel_math_FlxRandom();
-			var astroid_sm = new flixel_FlxSprite();
-			astroid_sm.loadGraphic("assets/images/Astroid_sm.png");
-			astroid_sm.set_x(ran.float(0,flixel_FlxG.width));
-			astroid_sm.set_y(ran.float(0,flixel_FlxG.height));
+			var astroid = new flixel_FlxSprite();
+			var size = Math.floor(ran.float(0,3));
+			if(size == 0) {
+				astroid.loadGraphic("assets/images/Astroid_sm.png");
+				astroid.health = 1;
+			} else if(size == 1) {
+				astroid.loadGraphic("assets/images/Astroid_md.png");
+				astroid.health = 2;
+			} else if(size == 2) {
+				astroid.loadGraphic("assets/images/Astroid_LG.png");
+				astroid.health = 3;
+			}
+			astroid.set_x(ran.float(0,flixel_FlxG.width));
+			astroid.set_y(ran.float(0,flixel_FlxG.height));
 			var radians = ran.float(0,360) * (Math.PI / 180);
 			var resetVelocity = false;
 			if(resetVelocity == null) {
@@ -5594,17 +5604,24 @@ PlayState.prototype = $extend(flixel_FlxState.prototype,{
 			var sinA = Math.sin(radians);
 			var cosA = Math.cos(radians);
 			if(resetVelocity) {
-				astroid_sm.velocity.set(0,0);
+				astroid.velocity.set(0,0);
 			}
-			astroid_sm.acceleration.set(cosA * 150,sinA * 150);
-			astroid_sm.maxVelocity.set(Math.abs(cosA * 50),Math.abs(sinA * 50));
-			astroid_sm.angularVelocity = ran.float(-100,100);
-			_gthis.add(astroid_sm);
-			_gthis.astroids.push(astroid_sm);
+			astroid.acceleration.set(cosA * 150,sinA * 150);
+			astroid.maxVelocity.set(Math.abs(cosA * 50),Math.abs(sinA * 50));
+			astroid.angularVelocity = ran.float(-100,100);
+			_gthis.add(astroid);
+			_gthis.astroids.push(astroid);
+			if(astroid.x < _gthis.ship.x + 30 && astroid.x > _gthis.ship.x - 30 && astroid.y < _gthis.ship.y + 30 && astroid.y > _gthis.ship.y - 30) {
+				var _g = astroid;
+				_g.set_x(_g.x + 35);
+				var _g = astroid;
+				_g.set_y(_g.y + 35);
+			}
 		};
 		this.shotTimer = new flixel_util_FlxTimer();
 		this.shotTimer.start(-1,function(onTimer) {
 			_gthis.remove(_gthis.shot);
+			_gthis.shot.kill();
 			_gthis.activeShot = false;
 		},0);
 	}
@@ -5717,9 +5734,10 @@ PlayState.prototype = $extend(flixel_FlxState.prototype,{
 		}
 		var _this = flixel_FlxG.keys.justPressed;
 		if(_this.keyManager.checkStatus(32,_this.status) && !this.activeShot) {
+			this.shot.revive();
 			this.activeShot = true;
-			this.shot.set_x(this.ship.x);
-			this.shot.set_y(this.ship.y);
+			this.shot.set_x(this.ship.x + this.ship.get_width() / 2);
+			this.shot.set_y(this.ship.y + this.ship.get_height() / 2 - this.shot.get_height() / 2);
 			this.shot.set_angle(this.ship.angle);
 			var a = this.ship.angle * (Math.PI / 180);
 			var X = Math.cos(a) * 300;
@@ -5781,11 +5799,67 @@ PlayState.prototype = $extend(flixel_FlxState.prototype,{
 			}
 			var tmp = flixel_util_FlxCollision.pixelPerfectCheck(astroid,this.ship);
 			if(flixel_util_FlxCollision.pixelPerfectCheck(astroid,this.shot) && this.activeShot) {
+				astroid.health--;
+				if(astroid.health > 0) {
+					var ran = new flixel_math_FlxRandom();
+					var newAstroid = new flixel_FlxSprite();
+					if(astroid.health == 2) {
+						newAstroid.loadGraphic("assets/images/Astroid_md.png");
+						newAstroid.health = 2;
+					} else if(astroid.health == 1) {
+						newAstroid.loadGraphic("assets/images/Astroid_sm.png");
+						newAstroid.health = 1;
+					}
+					newAstroid.set_x(astroid.x);
+					newAstroid.set_y(astroid.y);
+					var radians = ran.float(0,360) * (Math.PI / 180);
+					var resetVelocity = false;
+					if(resetVelocity == null) {
+						resetVelocity = true;
+					}
+					var sinA = Math.sin(radians);
+					var cosA = Math.cos(radians);
+					if(resetVelocity) {
+						newAstroid.velocity.set(0,0);
+					}
+					newAstroid.acceleration.set(cosA * 150,sinA * 150);
+					newAstroid.maxVelocity.set(Math.abs(cosA * 50),Math.abs(sinA * 50));
+					newAstroid.angularVelocity = ran.float(-100,100);
+					this.add(newAstroid);
+					this.astroids.push(newAstroid);
+					var ran1 = new flixel_math_FlxRandom();
+					var newAstroid1 = new flixel_FlxSprite();
+					if(astroid.health == 2) {
+						newAstroid1.loadGraphic("assets/images/Astroid_md.png");
+						newAstroid1.health = 2;
+					} else if(astroid.health == 1) {
+						newAstroid1.loadGraphic("assets/images/Astroid_sm.png");
+						newAstroid1.health = 1;
+					}
+					newAstroid1.set_x(astroid.x);
+					newAstroid1.set_y(astroid.y);
+					var radians1 = ran1.float(0,360) * (Math.PI / 180);
+					var resetVelocity1 = false;
+					if(resetVelocity1 == null) {
+						resetVelocity1 = true;
+					}
+					var sinA1 = Math.sin(radians1);
+					var cosA1 = Math.cos(radians1);
+					if(resetVelocity1) {
+						newAstroid1.velocity.set(0,0);
+					}
+					newAstroid1.acceleration.set(cosA1 * 150,sinA1 * 150);
+					newAstroid1.maxVelocity.set(Math.abs(cosA1 * 50),Math.abs(sinA1 * 50));
+					newAstroid1.angularVelocity = ran1.float(-100,100);
+					this.add(newAstroid1);
+					this.astroids.push(newAstroid1);
+				}
 				this.remove(astroid);
 				this.remove(this.shot);
 				this.shotTimer.active = false;
 				this.activeShot = false;
 				HxOverrides.remove(this.astroids,astroid);
+				astroid.destroy();
 			}
 		}
 	}
