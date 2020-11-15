@@ -4,16 +4,14 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.math.FlxAngle;
-import flixel.math.FlxMath;
 import flixel.math.FlxRandom;
-import flixel.math.FlxVector;
 import flixel.math.FlxVelocity;
+import flixel.text.FlxText;
 import flixel.util.FlxCollision;
+import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import haxe.Timer;
 import js.lib.Math;
-import lime.math.Vector2;
-
 class PlayState extends FlxState
 {
 	var bg:FlxSprite;
@@ -22,15 +20,22 @@ class PlayState extends FlxState
 	var activeShot = false;
 	var shotTimer: FlxTimer;
 	var astroids:Array<FlxSprite> = new Array();
+	var highscore = 0;
+	var hsText: FlxText;
 	override public function create()
 	{
 		super.create();
+
 
 		bg = new FlxSprite();
 		bg.loadGraphic(AssetPaths.BG__png);
 		bg.x = 0;
 		bg.y =  0;
-		add(bg);    
+		add(bg);
+
+		hsText = new FlxText(10,10, -1, 'Highscore ' + highscore, 12);
+		hsText.draw();
+		add(hsText);
 
 		ship = new FlxSprite();
 		ship.loadGraphic(AssetPaths.Ship__png);
@@ -94,7 +99,6 @@ class PlayState extends FlxState
 	override public function update(elapsed:Float)
 	{
 		super.update(elapsed);
-
 		if(!FlxG.keys.pressed.UP && !FlxG.keys.pressed.DOWN){
 			if(ship.velocity.x < 10 && ship.velocity.x > -10 && ship.velocity.y > -10 && ship.velocity.y < 10){
 				FlxVelocity.accelerateFromAngle(ship,(ship.angle -180) * FlxAngle.TO_RAD,0,150,true);
@@ -175,8 +179,13 @@ class PlayState extends FlxState
 			}
 			if(FlxCollision.pixelPerfectCheck(astroid, ship)){
 				// Game Over Screen here
+				FlxG.switchState(new GameOver(highscore));
 			}
 			if(FlxCollision.pixelPerfectCheck(astroid, shot) && activeShot){
+				highscore++;
+				remove(hsText);
+				hsText = new FlxText(10,10, -1, 'Highscore ' + highscore, 12);
+				add(hsText);
 				astroid.health--;
 				
 				if( astroid.health > 0 ){
@@ -211,5 +220,35 @@ class PlayState extends FlxState
 
 		
 		
+	}
+}
+
+class GameOver extends FlxState
+{
+	var highscore = 0;
+	public function new(highscore: Int) 
+	{
+    	super();
+    	this.highscore = highscore;
+	}
+	override public function create()
+	{
+		super.create();
+
+		var hsText = new FlxText(190,200, -1, 'Highscore ' + highscore, 36);
+		hsText.draw();
+		add(hsText);
+
+		var restartText = new FlxText(190,260, -1, 'Press R to restart', 24);
+		restartText.draw();
+		add(restartText);
+	}
+
+	override public function update(elapsed:Float)
+	{
+		super.update(elapsed);
+		if(FlxG.keys.pressed.R){
+			FlxG.switchState(new PlayState());
+		}
 	}
 }
